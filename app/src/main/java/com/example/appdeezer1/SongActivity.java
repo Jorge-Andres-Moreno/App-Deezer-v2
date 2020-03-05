@@ -14,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.squareup.picasso.Picasso;
-
 public class SongActivity extends AppCompatActivity {
 
     private ImageView image_song;
@@ -51,19 +49,19 @@ public class SongActivity extends AppCompatActivity {
         name_album = findViewById(R.id.name_album);
         duration = findViewById(R.id.duration);
 
-        controllerPlaylist.searchSong((long) getIntent().getExtras().get("songID"), new Callback() {
+        controllerPlaylist.searchSong((long) getIntent().getExtras().get("songID"), new MyCallback() {
             @Override
             public void notify(Object result, int statusCode) {
-                Picasso.get().load(controllerPlaylist.selectSong.getAlbum().getBigImageUrl()).into(image_song);
-                name_song.setText(controllerPlaylist.selectSong.getTitle());
-                name_artist.setText(controllerPlaylist.selectSong.getArtist().getName());
-                name_album.setText(controllerPlaylist.selectSong.getAlbum().getTitle());
-
-                int total = controllerPlaylist.selectSong.getDuration();
-                int minutos = total / 60;
-                int segundos = total % 60;
-
-                duration.setText(minutos + ":" + segundos);
+//                Picasso.get().load(controllerPlaylist.selectSong.getAlbum().getBigImageUrl()).into(image_song);
+//                name_song.setText(controllerPlaylist.selectSong.getTitle());
+//                name_artist.setText(controllerPlaylist.selectSong.getArtist().getName());
+//                name_album.setText(controllerPlaylist.selectSong.getAlbum().getTitle());
+//
+//                int total = controllerPlaylist.selectSong.getDuration();
+//                int minutos = total / 60;
+//                int segundos = total % 60;
+//
+//                duration.setText(minutos + ":" + segundos);
             }
         });
 

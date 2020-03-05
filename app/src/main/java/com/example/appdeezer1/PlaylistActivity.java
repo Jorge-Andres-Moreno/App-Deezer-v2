@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
 
 public class PlaylistActivity extends AppCompatActivity {
 
@@ -56,17 +53,17 @@ public class PlaylistActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        controller.searchSongs((long) getIntent().getExtras().get("playlistID"), new Callback() {
+        controller.searchSongs((long) getIntent().getExtras().get("playlistID"), new MyCallback() {
             @Override
             public void notify(Object result, int statusCode) {
 
                 adapter.notifyDataSetChanged();
 
-                fans.setText("Fans: " + controller.selectPlaylist.getFans());
-                count_songs.setText(" Canciones: " + controller.selectPlaylist.getTracks().size());
-                name_playlist.setText(controller.selectPlaylist.getTitle());
-                description_playlist.setText(controller.selectPlaylist.getDescription());
-                Picasso.get().load(controller.selectPlaylist.getBigImageUrl()).into((ImageView) findViewById(R.id.banner_image));
+//                fans.setText("Fans: " + controller.selectPlaylist.getFans());
+//                count_songs.setText(" Canciones: " + controller.selectPlaylist.getTracks().size());
+//                name_playlist.setText(controller.selectPlaylist.getTitle());
+//                description_playlist.setText(controller.selectPlaylist.getDescription());
+//                Picasso.get().load(controller.selectPlaylist.getBigImageUrl()).into((ImageView) findViewById(R.id.banner_image));
 
             }
         });

@@ -55,12 +55,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (v.getId() == R.id.button_search) {
-                    controller.searchPlaylist(search.getText().toString(), new Callback() {
+                    controller.searchNamePlaylist(search.getText().toString(), new MyCallback() {
                         @Override
                         public void notify(Object result, int statusCode) {
-                            Log.i("MAIN_REQUEST_PLAYLIST", statusCode == Callback.SUCESS_CODE ? "SUCESS" : "FAILED");
-                            if (statusCode == Callback.SUCESS_CODE) {
-                                adapter.notifyDataSetChanged();
+                            Log.i("MAIN_REQUEST_PLAYLIST", statusCode == MyCallback.SUCESS_CODE ? "SUCESS" : "FAILED");
+                            if (statusCode == MyCallback.SUCESS_CODE) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                });
+
                             }
                         }
                     });
