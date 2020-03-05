@@ -1,4 +1,4 @@
-package com.example.appdeezer1;
+package com.example.appdeezer1.view;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.appdeezer1.R;
+import com.example.appdeezer1.utils.MyCallback;
 
 public class SongActivity extends AppCompatActivity {
 

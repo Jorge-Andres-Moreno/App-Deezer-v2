@@ -1,4 +1,4 @@
-package com.example.appdeezer1;
+package com.example.appdeezer1.view;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.appdeezer1.R;
+import com.example.appdeezer1.utils.MyCallback;
 
 public class PlaylistActivity extends AppCompatActivity {
 

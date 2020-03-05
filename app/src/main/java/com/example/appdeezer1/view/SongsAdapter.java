@@ -1,4 +1,4 @@
-package com.example.appdeezer1;
+package com.example.appdeezer1.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.example.appdeezer1.R;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongHolder> {
 

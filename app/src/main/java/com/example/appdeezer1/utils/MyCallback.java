@@ -1,4 +1,4 @@
-package com.example.appdeezer1;
+package com.example.appdeezer1.utils;
 
 public interface MyCallback {
 

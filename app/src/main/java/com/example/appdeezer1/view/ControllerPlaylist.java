@@ -1,11 +1,7 @@
-package com.example.appdeezer1;
+package com.example.appdeezer1.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
 //import com.deezer.sdk.model.Playlist;
 //import com.deezer.sdk.model.Track;
@@ -18,6 +14,9 @@ import android.widget.Toast;
 //import com.deezer.sdk.player.TrackPlayer;
 //import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
 //import com.deezer.sdk.player.networkcheck.WifiAndMobileNetworkStateChecker;
+
+import com.example.appdeezer1.model.Playlist;
+import com.example.appdeezer1.utils.MyCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
