@@ -2,20 +2,11 @@ package com.example.appdeezer1.view;
 
 import android.app.Activity;
 import android.content.Context;
-
-//import com.deezer.sdk.model.Playlist;
-//import com.deezer.sdk.model.Track;
-//import com.deezer.sdk.network.connect.DeezerConnect;
-//import com.deezer.sdk.network.request.DeezerRequest;
-//import com.deezer.sdk.network.request.DeezerRequestFactory;
-//import com.deezer.sdk.network.request.event.DeezerError;
-//import com.deezer.sdk.network.request.event.JsonRequestListener;
-//import com.deezer.sdk.network.request.event.RequestListener;
-//import com.deezer.sdk.player.TrackPlayer;
-//import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
-//import com.deezer.sdk.player.networkcheck.WifiAndMobileNetworkStateChecker;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.example.appdeezer1.model.Playlist;
+import com.example.appdeezer1.model.Track;
 import com.example.appdeezer1.utils.MyCallback;
 
 import org.json.JSONArray;
@@ -32,32 +23,28 @@ import okhttp3.Response;
 
 public class ControllerPlaylist {
 
-    //    final private String applicationID = "398524";
-    //    private DeezerConnect deezerConnect;
-
     private Context context;
 
     public ArrayList<Playlist> playlists;
     public Playlist selectPlaylist;
-//    public Track selectSong;
+    private OkHttpClient client;
+    public Track selectSong;
 
     public ControllerPlaylist(Context context) {
         this.context = context;
-        connection(context);
-//        Toast.makeText(context, deezerConnect != null ? "SUCESS CONECTION" : "FAILED CONECTION", Toast.LENGTH_SHORT).show();
         playlists = new ArrayList<>();
+        connection();
     }
 
-
-    public void connection(Context context) {
-//        deezerConnect = new DeezerConnect(context, applicationID);
+    public void connection() {
+        client = new OkHttpClient();
     }
 
     public void searchNamePlaylist(final String playlist, final MyCallback callback) {
 
         try {
+
             String url = "https://api.deezer.com/search/playlist?q=" + playlist;
-            OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
                     .url(url)
@@ -74,6 +61,7 @@ public class ControllerPlaylist {
                 public void onResponse(Call call, Response response) throws IOException {
 
                     try {
+
                         JSONArray data = (new JSONObject(response.body().string())).getJSONArray("data");
                         playlists = new ArrayList<>();
                         for (int i = 0; i < data.length(); i++) {
@@ -96,112 +84,127 @@ public class ControllerPlaylist {
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        callback.notify(null, MyCallback.WRONG_CODE);
                     }
-
-//            MainActivity.this.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    txtString.setText(myResponse);
-//                }
-//            });
-
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            callback.notify(null, MyCallback.WRONG_CODE);
         }
-//
-//        RequestListener requestListener = new JsonRequestListener() {
-//            @Override
-//            public void onResult(Object o, Object o1) {
-//                Toast.makeText(context, "onResult", Toast.LENGTH_SHORT).show();
-//                playlists = (ArrayList<Playlist>) o;
-//                callback.notify(o, MyCallback.SUCESS_CODE);
-//
-//            }
-//
-//            @Override
-//            public void onUnparsedResult(String s, Object o) {
-//                Toast.makeText(context, "onUnparsedResult", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onException(Exception e, Object o) {
-//                Toast.makeText(context, "onException", Toast.LENGTH_SHORT).show();
-//                callback.notify(e, MyCallback.SUCESS_CODE);
-//            }
-//        };
-//        DeezerRequest deezerRequest = DeezerRequestFactory.requestSearchPlaylists(playlist);
-//        deezerRequest.setId("searchPlaylist");
-//        deezerConnect.requestAsync(deezerRequest, requestListener);
+
     }
 
-    public void searchSongs(long playlistID, final MyCallback callback) {
+    public void searchPlaylist(String playlistID, final MyCallback callback) {
 
-//        RequestListener requestListener = new JsonRequestListener() {
-//            @Override
-//            public void onResult(Object o, Object o1) {
-//                Toast.makeText(context, "onResult", Toast.LENGTH_SHORT).show();
-//                selectPlaylist = (Playlist) o;
-//                callback.notify(o, MyCallback.SUCESS_CODE);
-//            }
-//
-//            @Override
-//            public void onUnparsedResult(String s, Object o) {
-//                Toast.makeText(context, "onUnparsedResult", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onException(Exception e, Object o) {
-//                Toast.makeText(context, "onException", Toast.LENGTH_SHORT).show();
-//                callback.notify(e, MyCallback.SUCESS_CODE);
-//            }
-//        };
-//        DeezerRequest deezerRequest = DeezerRequestFactory.requestPlaylist(playlistID);
-//        deezerRequest.setId("searchSongs");
-//        deezerConnect.requestAsync(deezerRequest, requestListener);
+        try {
+
+            String url = "https://api.deezer.com/playlist/" + playlistID;
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    try {
+
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        selectPlaylist = new Playlist();
+                        selectPlaylist.id = jsonObject.getString("id");
+                        selectPlaylist.nb_tracks = jsonObject.getInt("nb_tracks");
+                        selectPlaylist.picture_big = jsonObject.getString("picture_big");
+                        selectPlaylist.picture_medium = jsonObject.getString("picture_medium");
+                        selectPlaylist.title = jsonObject.getString("title");
+                        selectPlaylist.fans = jsonObject.getString("fans");
+                        selectPlaylist.creation_date = jsonObject.getString("creation_date").split(" ")[0];
+                        selectPlaylist.description = jsonObject.getString("description");
+                        selectPlaylist.user_name = jsonObject.getJSONObject("creator").getString("name");
+
+                        JSONArray data = jsonObject.getJSONObject("tracks").getJSONArray("data");
+
+                        for (int i = 0; i < data.length(); i++) {
+
+                            JSONObject json = data.getJSONObject(i);
+                            Track track = new Track();
+                            track.id = json.getString("id");
+                            track.title = json.getString("title");
+                            track.duration = json.getInt("duration");
+                            track.artist_name = json.getJSONObject("artist").getString("name");
+                            track.album_cover = json.getJSONObject("album").getString("cover");
+
+                            selectPlaylist.tracks.add(track);
+                        }
+                        callback.notify(selectPlaylist, MyCallback.SUCESS_CODE);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callback.notify(null, MyCallback.WRONG_CODE);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.notify(null, MyCallback.WRONG_CODE);
+        }
     }
 
-    public void searchSong(long songID, final MyCallback callback) {
+    public void searchSong(String songID, final MyCallback callback) {
+        try {
 
-//        RequestListener requestListener = new JsonRequestListener() {
-//            @Override
-//            public void onResult(Object o, Object o1) {
-//                Toast.makeText(context, "onResult", Toast.LENGTH_SHORT).show();
-//                selectSong = (Track) o;
-//                callback.notify(o, MyCallback.SUCESS_CODE);
-//            }
-//
-//            @Override
-//            public void onUnparsedResult(String s, Object o) {
-//                Toast.makeText(context, "onUnparsedResult", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onException(Exception e, Object o) {
-//                Toast.makeText(context, "onException", Toast.LENGTH_SHORT).show();
-//                callback.notify(e, MyCallback.SUCESS_CODE);
-//            }
-//        };
-//        DeezerRequest deezerRequest = DeezerRequestFactory.requestTrack(songID);
-//        deezerRequest.setId("searchSong");
-//        deezerConnect.requestAsync(deezerRequest, requestListener);
+            String url = "https://api.deezer.com/track/" + songID;
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .get()
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        selectSong = new Track();
+                        selectSong.id = jsonObject.getString("id");
+                        selectSong.title = jsonObject.getString("title");
+                        selectSong.artist_name = jsonObject.getJSONObject("artist").getString("name");
+                        selectSong.album_cover = jsonObject.getJSONObject("album").getString("cover_big");
+                        selectSong.album_title = jsonObject.getJSONObject("album").getString("title");
+                        selectSong.preview = jsonObject.getString("preview");
+                        selectSong.duration = jsonObject.getInt("duration");
+
+                        callback.notify(selectPlaylist, MyCallback.SUCESS_CODE);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        callback.notify(null, MyCallback.WRONG_CODE);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.notify(null, MyCallback.WRONG_CODE);
+        }
+
     }
 
     public void playSong(Activity activity) {
-//        TrackPlayer mTrackPlayer;
-//
-//        Uri webpage = Uri.parse(selectSong.getPreviewUrl());
-//
-//        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
-//        activity.startActivity(webIntent);
-//
-//        try {
-//            mTrackPlayer = new TrackPlayer(activity.getApplication(), deezerConnect, new WifiAndMobileNetworkStateChecker());
-//        } catch (TooManyPlayersExceptions e) {
-//            e.printStackTrace();
-//        } catch (DeezerError e) {
-//            e.printStackTrace();
-//        }
+        Uri uri = Uri.parse(selectSong.preview);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        activity.startActivity(intent);
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appdeezer1.R;
 import com.example.appdeezer1.utils.MyCallback;
+import com.squareup.picasso.Picasso;
 
 public class PlaylistActivity extends AppCompatActivity {
 
@@ -56,17 +58,24 @@ public class PlaylistActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        controller.searchSongs((long) getIntent().getExtras().get("playlistID"), new MyCallback() {
+        controller.searchPlaylist("" + getIntent().getExtras().get("playlistID"), new MyCallback() {
             @Override
             public void notify(Object result, int statusCode) {
 
-                adapter.notifyDataSetChanged();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-//                fans.setText("Fans: " + controller.selectPlaylist.getFans());
-//                count_songs.setText(" Canciones: " + controller.selectPlaylist.getTracks().size());
-//                name_playlist.setText(controller.selectPlaylist.getTitle());
-//                description_playlist.setText(controller.selectPlaylist.getDescription());
-//                Picasso.get().load(controller.selectPlaylist.getBigImageUrl()).into((ImageView) findViewById(R.id.banner_image));
+                        fans.setText("Fans: " + controller.selectPlaylist.fans);
+                        count_songs.setText(" Canciones: " + controller.selectPlaylist.tracks.size());
+                        name_playlist.setText(controller.selectPlaylist.title);
+                        description_playlist.setText(controller.selectPlaylist.description);
+                        Picasso.get().load(controller.selectPlaylist.picture_big).into((ImageView) findViewById(R.id.banner_image));
+
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
 
             }
         });

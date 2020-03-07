@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.appdeezer1.R;
 import com.example.appdeezer1.utils.MyCallback;
+import com.squareup.picasso.Picasso;
 
 public class SongActivity extends AppCompatActivity {
 
@@ -52,19 +53,25 @@ public class SongActivity extends AppCompatActivity {
         name_album = findViewById(R.id.name_album);
         duration = findViewById(R.id.duration);
 
-        controllerPlaylist.searchSong((long) getIntent().getExtras().get("songID"), new MyCallback() {
+        controllerPlaylist.searchSong("" + getIntent().getExtras().get("songID"), new MyCallback() {
             @Override
             public void notify(Object result, int statusCode) {
-//                Picasso.get().load(controllerPlaylist.selectSong.getAlbum().getBigImageUrl()).into(image_song);
-//                name_song.setText(controllerPlaylist.selectSong.getTitle());
-//                name_artist.setText(controllerPlaylist.selectSong.getArtist().getName());
-//                name_album.setText(controllerPlaylist.selectSong.getAlbum().getTitle());
-//
-//                int total = controllerPlaylist.selectSong.getDuration();
-//                int minutos = total / 60;
-//                int segundos = total % 60;
-//
-//                duration.setText(minutos + ":" + segundos);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Picasso.get().load(controllerPlaylist.selectSong.album_cover).into(image_song);
+                        name_song.setText(controllerPlaylist.selectSong.title);
+                        name_artist.setText(controllerPlaylist.selectSong.artist_name);
+                        name_album.setText(controllerPlaylist.selectSong.album_title);
+
+                        int total = controllerPlaylist.selectSong.duration;
+                        int minutos = total / 60;
+                        int segundos = total % 60;
+
+                        duration.setText(minutos + ":" + segundos);
+
+                    }
+                });
             }
         });
 

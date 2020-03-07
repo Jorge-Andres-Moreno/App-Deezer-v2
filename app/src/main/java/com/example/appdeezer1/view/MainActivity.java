@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ControllerPlaylist controller;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

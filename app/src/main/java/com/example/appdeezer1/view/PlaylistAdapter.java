@@ -1,6 +1,7 @@
 package com.example.appdeezer1.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
     public int getItemCount() {
         Log.i("getItemCount()", controllerPlaylist.playlists.size() + "");
         return controllerPlaylist.playlists.size();
-//        return 0;
     }
 
     public class PlaylistHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -67,9 +67,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.card) {
-//                Intent in = new Intent(context, PlaylistActivity.class);
-////                in.putExtra("playlistID", controllerPlaylist.playlists.get(pos).getId());
-//                context.startActivity(in);
+                Intent in = new Intent(context, PlaylistActivity.class);
+                in.putExtra("playlistID", controllerPlaylist.playlists.get(pos).id);
+                context.startActivity(in);
             }
         }
     }

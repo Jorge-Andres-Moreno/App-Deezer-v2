@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appdeezer1.R;
+import com.squareup.picasso.Picasso;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongHolder> {
 
@@ -32,19 +33,19 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull SongHolder holder, int position) {
-//
-//        Picasso.get().load(controllerPlaylist.selectPlaylist.getTracks().get(position).getAlbum().getImageUrl()).into(holder.image_song);
-//        holder.name_song.setText("Nombre de la canción: " + controllerPlaylist.selectPlaylist.getTracks().get(position).getTitle());
-//        holder.name_artist.setText("Artista de la canción: " + controllerPlaylist.selectPlaylist.getTracks().get(position).getArtist().getName());
-//        holder.release_year.setText("Año de lanzamiento: " + controllerPlaylist.selectPlaylist.getTracks().get(position).getAlbum().getReleaseDate());
-//        holder.pos = position;
+
+        Picasso.get().load(controllerPlaylist.selectPlaylist.tracks.get(position).album_cover).into(holder.image_song);
+        holder.name_song.setText("Nombre de la canción: " + controllerPlaylist.selectPlaylist.tracks.get(position).title);
+        holder.name_artist.setText("Artista de la canción: " + controllerPlaylist.selectPlaylist.tracks.get(position).artist_name);
+//        holder.release_year.setText("Año de lanzamiento: " + controllerPlaylist.selectPlaylist.tracks.get(position).);
+        holder.pos = position;
 
     }
 
     @Override
     public int getItemCount() {
-//        return controllerPlaylist.selectPlaylist != null ? controllerPlaylist.selectPlaylist.getTracks().size() : 0;
-        return 0;
+        return controllerPlaylist.selectPlaylist != null ? controllerPlaylist.selectPlaylist.tracks.size() : 0;
+//        return 0;
     }
 
     public class SongHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -68,7 +69,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongHolder> 
         public void onClick(View v) {
             if (v.getId() == R.id.card) {
                 Intent in = new Intent(context, SongActivity.class);
-//                in.putExtra("songID", controllerPlaylist.selectPlaylist.getTracks().get(pos).getId());
+                in.putExtra("songID", controllerPlaylist.selectPlaylist.tracks.get(pos).id);
                 context.startActivity(in);
             }
         }
